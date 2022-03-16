@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+void play_game(int wordLength, int maxGuesses, char* dictionaryName);
+
 int main(int argc, char *argv[]) {
     int valid = 1;
     int wordLength = 5;
@@ -34,9 +36,15 @@ int main(int argc, char *argv[]) {
     }
 
     if (!valid) {
-        puts("Usage: wordle [-len word-length] [-max max-guesses] [dictionary]");
+        printf("Usage: wordle [-len word-length] [-max max-guesses] [dictionary]");
         return 1;
     }
 
+    play_game(wordLength, maxGuesses, dictionaryName);
     return 0;
+}
+
+void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
+    printf("Welcome to Wordle!");
+    char* answer  = get_random_word(wordLength);
 }
