@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     int wordSet = 0;
     int maxGuesses = 6;
     int guessesSet = 0;
-    char* dictionaryName = "";
+    char* dictionaryName = "/usr/share/dict/words";
     
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-len") == 0) {
