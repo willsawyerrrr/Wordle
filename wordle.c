@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     int maxGuesses = 6;
     int guessesSet = 0;
     char* dictionaryName = "/usr/share/dict/words";
+    int dictionarySet = 0;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-len") == 0) {
@@ -46,7 +47,13 @@ int main(int argc, char *argv[]) {
             valid = 0;
             break;
         } else if (atoi(argv[i]) == 0) {
-            dictionaryName = argv[i];
+            if (!dictionarySet) {
+                dictionaryName = argv[i];
+                dictionarySet = 1;
+            } else {
+                valid = 0;
+                break;
+            }
         }
     }
 
