@@ -8,6 +8,7 @@
 
 int main(int argc, char *argv[]);
 void play_game(int wordLength, int maxGuesses, char* dictionaryName);
+int check_dictionary(char* guess, char* dictionaryName);
 
 int main(int argc, char *argv[]) {
     int valid = 1;
@@ -98,8 +99,12 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
                 printf("Correct!\n");
                 exit(0);
             } else { // guess not correct answer
-                i--;
-                printf("Word not found in the dictionary - try again.\n");
+                if (check_dictionary(guess, dictionaryName) == 1) {
+                    // report on matches
+                } else {
+                    i--;
+                    printf("Word not found in the dictionary - try again.\n");
+                }
             }
         }
     }
@@ -108,3 +113,14 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     exit(3);
 }
 
+int check_dictionary(char* guess, char* dictionaryName) {
+    FILE *dictionary = fopen(dictionaryName, "r");
+    char* word = malloc(strlen(guess));
+    while (fgets(word, MAX_WORD_LENGTH, dictionary) != NULL) {
+        word = strsep(&word, "\n");
+        if (strcmp(word, guess) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
