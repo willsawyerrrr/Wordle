@@ -68,15 +68,17 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
         guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
 
         if (strlen(guess) != wordLength + 1) {
+            i--;
             printf("Words must be %d letters long - try again.\n", wordLength);
-        }
-
-        for (int j = 0; j < wordLength; j++) {
-            if (!isalpha(guess[j])) {
-                printf("Words must contain only letters - try again.\n");
-                break;
+        } else {
+            for (int j = 0; j < wordLength; j++) {
+                if (!isalpha(guess[j])) {
+                    i--;
+                    printf("Words must contain only letters - try again.\n");
+                    break;
+                }
             }
-        }
+        } 
     }
 
     printf("Bad luck - the word is \"%s\".\n", answer);
