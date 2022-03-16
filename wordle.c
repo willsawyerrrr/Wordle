@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_GUESS_LENGTH 50
+#define MAX_GUESS_LENGTH 52
 
+int main(int argc, char *argv[]);
 void play_game(int wordLength, int maxGuesses, char* dictionaryName);
 
 int main(int argc, char *argv[]) {
@@ -66,21 +67,30 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     for (int i = 0; i < maxGuesses; i++) {
         printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
         guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
+        guess = strsep(&guess, "\n");
 
-        if (feof(stdin)) {
+        if (feof(stdin)) { // no guess made
             break;
-        } else if (strlen(guess) != wordLength + 1) {
+        } else if (strlen(guess) != wordLength) { // guess is wrong size
             i--;
             printf("Words must be %d letters long - try again.\n", wordLength);
-        } else {
+        } else { // guess is correct size
             for (int j = 0; j < wordLength; j++) {
-                if (!isalpha(guess[j])) {
+                if (!isalpha(guess[j])) { // non-alphabetical character present
                     i--;
                     printf("Words must contain only letters - try again.\n");
                     break;
                 }
             }
-        } 
+
+            if (strcmp(guess, answer) == 0) { // guess is correct answer
+                printf("Correct!\n");
+                exit(0);
+            } else { // guess not correct answer
+                i--;
+                printf("Word not found in the dictionary - try again.\n");
+            }
+        }
     }
 
     printf("Bad luck - the word is \"%s\".\n", answer);
