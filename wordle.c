@@ -47,4 +47,8 @@ int main(int argc, char *argv[]) {
 void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     printf("Welcome to Wordle!");
     char* answer  = get_random_word(wordLength);
+
+    for (int i = 1; i <= maxGuesses; i++) {
+        printf("Enter a %d letter word (%d attempts remaining): ", i, maxGuesses + 1 - i);
+    }
 }
