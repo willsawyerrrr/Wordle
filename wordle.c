@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_GUESS_LENGTH 50
+
 void play_game(int wordLength, int maxGuesses, char* dictionaryName);
 
 int main(int argc, char *argv[]) {
@@ -12,7 +14,7 @@ int main(int argc, char *argv[]) {
     int maxGuesses = 6;
     int guessesSet = 0;
     char* dictionaryName = "/usr/share/dict/words";
-    
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-len") == 0) {
             if (i < argc - 1 && !wordSet) {
@@ -45,10 +47,16 @@ int main(int argc, char *argv[]) {
 }
 
 void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
-    printf("Welcome to Wordle!");
+    printf("Welcome to Wordle!\n");
     char* answer  = get_random_word(wordLength);
+    char* guess = malloc(wordLength);
 
-    for (int i = 1; i <= maxGuesses; i++) {
-        printf("Enter a %d letter word (%d attempts remaining): ", i, maxGuesses + 1 - i);
+    for (int i = 0; i < maxGuesses; i++) {
+        printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
+        guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
+        if (strlen(guess) != wordLength + 1) {
+            printf("Words must be %d letters long - try again.\n", wordLength);
+        }
     }
 }
+
