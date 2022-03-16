@@ -67,7 +67,9 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
         printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
         guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
 
-        if (strlen(guess) != wordLength + 1) {
+        if (feof(stdin)) {
+            break;
+        } else if (strlen(guess) != wordLength + 1) {
             i--;
             printf("Words must be %d letters long - try again.\n", wordLength);
         } else {
