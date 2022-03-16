@@ -1,4 +1,5 @@
 #include <csse2310a1.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,14 +49,21 @@ int main(int argc, char *argv[]) {
 
 void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     printf("Welcome to Wordle!\n");
-    char* answer  = get_random_word(wordLength);
     char* guess = malloc(wordLength);
 
     for (int i = 0; i < maxGuesses; i++) {
         printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
         guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
+
         if (strlen(guess) != wordLength + 1) {
             printf("Words must be %d letters long - try again.\n", wordLength);
+        }
+
+        for (int j = 0; j < wordLength; j++) {
+            if (!isalpha(guess[j])) {
+                printf("Words must contain only letters - try again.\n");
+                break;
+            }
         }
     }
 }
