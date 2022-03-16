@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 
 void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     printf("Welcome to Wordle!\n");
+    char* answer = get_random_word(wordLength);
     char* guess = malloc(wordLength);
 
     for (int i = 0; i < maxGuesses; i++) {
@@ -66,5 +67,8 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
             }
         }
     }
+
+    printf("Bad luck - the word is \"%s\".", answer);
+    exit(3);
 }
 
