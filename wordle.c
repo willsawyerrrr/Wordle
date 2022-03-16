@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_GUESS_LENGTH 52
+#define MAX_WORD_LENGTH 52
 
 int main(int argc, char *argv[]);
 void play_game(int wordLength, int maxGuesses, char* dictionaryName);
@@ -49,6 +49,10 @@ int main(int argc, char *argv[]) {
         } else if (atoi(argv[i]) == 0) {
             if (!dictionarySet) {
                 dictionaryName = argv[i];
+                if (fopen(dictionaryName, "r") == NULL) {
+                    printf("wordle:  dictionary file \"%s\" cannot be opened\n", dictionaryName);
+                    return 2;
+                }
                 dictionarySet = 1;
             } else {
                 valid = 0;
@@ -73,7 +77,7 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
 
     for (int i = 0; i < maxGuesses; i++) {
         printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
-        guess = fgets(guess, MAX_GUESS_LENGTH, stdin);
+        guess = fgets(guess, MAX_WORD_LENGTH, stdin);
         guess = strsep(&guess, "\n");
 
         if (feof(stdin)) { // no guess made
