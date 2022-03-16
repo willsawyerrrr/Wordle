@@ -19,27 +19,38 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-len") == 0) {
             if (i < argc - 1 && !wordSet) {
-                wordLength = atoi(argv[i + 1]);
+                wordLength = atoi(argv[++i]);
                 wordSet = 1;
+                if (wordLength < 3 || wordLength > 9) {
+                    valid = 0;
+                    break;
+                }
             } else {
                 valid = 0;
+                break;
             } 
         } else if (strcmp(argv[i], "-max") == 0) {
             if (i < argc -1 && !guessesSet) {
-                maxGuesses = atoi(argv[i + 1]);
+                maxGuesses = atoi(argv[++i]);
                 guessesSet = 1;
+                if (maxGuesses < 3 || maxGuesses > 9) {
+                    valid = 0;
+                    break;
+                }
 	        } else {
     	    	valid = 0;
+                break;
 	        }
         } else if (((int) argv[i][0]) == '-') {
             valid = 0;
+            break;
         } else if (atoi(argv[i]) == 0) {
             dictionaryName = argv[i];
         }
     }
 
     if (!valid) {
-        printf("Usage: wordle [-len word-length] [-max max-guesses] [dictionary]");
+        printf("Usage: wordle [-len word-length] [-max max-guesses] [dictionary]\n");
         return 1;
     }
 
@@ -68,7 +79,7 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
         }
     }
 
-    printf("Bad luck - the word is \"%s\".", answer);
+    printf("Bad luck - the word is \"%s\".\n", answer);
     exit(3);
 }
 
