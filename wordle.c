@@ -9,6 +9,7 @@
 int main(int argc, char *argv[]);
 void play_game(int wordLength, int maxGuesses, char* dictionaryName);
 int check_dictionary(char* guess, char* dictionaryName);
+char* report_matches(char* answer, char* guess);
 
 int main(int argc, char *argv[]) {
     int valid = 1;
@@ -105,7 +106,7 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
                 exit(0);
             } else { // guess not correct answer
                 if (check_dictionary(guess, dictionaryName) == 1) {
-                    // TODO: report matches
+                    printf("%s\n", report_matches(answer, guess));
                 } else {
                     i--;
                     printf("Word not found in the dictionary - try again.\n");
@@ -134,5 +135,21 @@ int check_dictionary(char* guess, char* dictionaryName) {
         }
     }
     return 0;
+}
+
+char* report_matches(char* answer, char* guess) {
+    for (int i = 0; answer[i]; i++) {
+        answer[i] = tolower(answer[i]);
+        guess[i] = tolower(guess[i]);
+    }
+    char* matches = malloc(strlen(guess));
+    for (int i = 0; i < strlen(guess); i++) {
+        if (answer[i] == guess[i]) {
+            matches[i] = toupper(answer[i]);
+        } else {
+            matches[i] = '-';
+        }
+    }
+    return matches;
 }
 
