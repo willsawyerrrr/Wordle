@@ -105,7 +105,7 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
                 exit(0);
             } else { // guess not correct answer
                 if (check_dictionary(guess, dictionaryName) == 1) {
-                    // TODO: report on matches
+                    // TODO: report matches
                 } else {
                     i--;
                     printf("Word not found in the dictionary - try again.\n");
@@ -120,12 +120,19 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
 
 int check_dictionary(char* guess, char* dictionaryName) {
     FILE *dictionary = fopen(dictionaryName, "r");
+    for (int i = 0; guess[i]; i++) {
+        guess[i] = tolower(guess[i]);
+    }
     char* word = malloc(strlen(guess));
     while (fgets(word, MAX_WORD_LENGTH, dictionary) != NULL) {
         word = strsep(&word, "\n");
+        for (int i = 0; word[i]; i++) {
+            word[i] = tolower(word[i]);
+        }
         if (strcmp(word, guess) == 0) {
             return 1;
         }
     }
     return 0;
 }
+
