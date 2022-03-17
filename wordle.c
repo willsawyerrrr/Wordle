@@ -146,6 +146,8 @@ char* report_matches(char* answer, char* guess) {
     for (int i = 0; i < strlen(guess); i++) {
         if (answer[i] == guess[i]) {
             matches[i] = toupper(answer[i]);
+        } else if (strchr(answer, guess[i]) != NULL) {
+            matches[i] = guess[i];
         } else {
             matches[i] = '-';
         }
