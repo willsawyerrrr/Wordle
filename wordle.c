@@ -76,8 +76,13 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
     char* answer = get_random_word(wordLength);
     char* guess = malloc(wordLength);
 
-    for (int i = 0; i < maxGuesses; i++) {
-        printf("Enter a %d letter word (%d attempts remaining): ", wordLength, maxGuesses - i);
+    for (int i = maxGuesses; i > 0; i--) {
+        if (i == 1) {
+            printf("Enter a %d letter word (last attempt): ", wordLength);
+        } else {
+            printf("Enter a %d letter word (%d attempts remaining): ", wordLength, i);
+        }
+
         guess = fgets(guess, MAX_WORD_LENGTH, stdin);
         guess = strsep(&guess, "\n");
 
@@ -100,7 +105,7 @@ void play_game(int wordLength, int maxGuesses, char* dictionaryName) {
                 exit(0);
             } else { // guess not correct answer
                 if (check_dictionary(guess, dictionaryName) == 1) {
-                    // report on matches
+                    // TODO: report on matches
                 } else {
                     i--;
                     printf("Word not found in the dictionary - try again.\n");
