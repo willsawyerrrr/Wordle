@@ -19,23 +19,22 @@ int main(int argc, char* argv[]) {
     char dictionaryName[] = "/usr/share/dict/words";
 
     if (!validate_arguments(argc, argv)) {
-        printf("Usage: wordle [-len word-length] [-max max-guesses] \
-                [dictionary]\n");
+        printf("Usage: wordle [-len word-length] [-max max-guesses] "
+                "[dictionary]\n");
         return 1;
     }
 
     // arguments are valid - use arguments
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-len")) {
+        if (strcmp(argv[i], "-len") == 0) {
             wordLength = atoi(argv[i + 1]);
             i++;
-        } else if (!strcmp(argv[i], "-max")) {
-            wordLength = atoi(argv[i + 1]);
+        } else if (strcmp(argv[i], "-max") == 0) {
+            maxGuesses = atoi(argv[i + 1]);
             i++;
         } else {
             strcpy(dictionaryName, argv[i]);
         }
-        printf("%s", dictionaryName);
     }
 
     play_game(wordLength, maxGuesses, dictionaryName);
@@ -50,7 +49,7 @@ int validate_arguments(int argc, char* argv[]) {
     int dictionarySet = 0;
     char dictionaryName[] = "";
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-len") == 0) {
+        if (!strcmp(argv[i], "-len")) {
             if (i < argc - 1 && !wordSet) {
                 wordLength = atoi(argv[++i]);
                 wordSet = 1;
@@ -60,7 +59,7 @@ int validate_arguments(int argc, char* argv[]) {
             } else {
                 return 0;
             } 
-        } else if (strcmp(argv[i], "-max") == 0) {
+        } else if (!strcmp(argv[i], "-max")) {
             if (i < argc - 1 && !guessesSet) {
                 maxGuesses = atoi(argv[++i]);
                 guessesSet = 1;
@@ -77,8 +76,8 @@ int validate_arguments(int argc, char* argv[]) {
                 strcpy(dictionaryName, argv[i]);
                 FILE* dictionary = fopen(dictionaryName, "r");
                 if (dictionary == NULL) {
-                    printf("wordle:  dictionary file \"%s\" cannot be \
-                            opened\n", dictionaryName);
+                    printf("wordle:  dictionary file \"%s\" cannot be "
+                            "opened\n", dictionaryName);
                     fclose(dictionary);
                     return 0;
                 }
