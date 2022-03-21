@@ -6,73 +6,91 @@
 
 #define MAX_WORD_LENGTH 52
 
-int main(int argc, char *argv[]);
+int main(int argc, char* argv[]);
+int validate_arguments(int argc, char* argv[]);
 void play_game(int wordLength, int maxGuesses, char dictionaryName[]);
+char* prompt_guess(int wordLength, int guesses);
 int check_dictionary(char guess[], char dictionaryName[]);
 char* report_matches(char answer[], char guess[]);
 
 int main(int argc, char* argv[]) {
-    int valid = 1;
     int wordLength = 5;
-    int wordSet = 0;
     int maxGuesses = 6;
-    int guessesSet = 0;
     char dictionaryName[] = "/usr/share/dict/words";
-    int dictionarySet = 0;
 
+    if (!validate_arguments(argc, argv)) {
+        printf("Usage: wordle [-len word-length] [-max max-guesses] \
+                [dictionary]\n");
+        return 1;
+    }
+
+    // arguments are valid - use arguments
+    for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-len")) {
+            wordLength = atoi(argv[i + 1]);
+            i++;
+        } else if (!strcmp(argv[i], "-max")) {
+            wordLength = atoi(argv[i + 1]);
+            i++;
+        } else {
+            strcpy(dictionaryName, argv[i]);
+        }
+        printf("%s", dictionaryName);
+    }
+
+    play_game(wordLength, maxGuesses, dictionaryName);
+    return 0;
+}
+
+int validate_arguments(int argc, char* argv[]) {
+    int wordSet = 0;
+    int wordLength = 0;
+    int guessesSet = 0;
+    int maxGuesses = 0;
+    int dictionarySet = 0;
+    char dictionaryName[] = "";
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-len") == 0) {
             if (i < argc - 1 && !wordSet) {
                 wordLength = atoi(argv[++i]);
                 wordSet = 1;
                 if (wordLength < 3 || wordLength > 9) {
-                    valid = 0;
-                    break;
+                    return 0;
                 }
             } else {
-                valid = 0;
-                break;
+                return 0;
             } 
         } else if (strcmp(argv[i], "-max") == 0) {
-            if (i < argc -1 && !guessesSet) {
+            if (i < argc - 1 && !guessesSet) {
                 maxGuesses = atoi(argv[++i]);
                 guessesSet = 1;
                 if (maxGuesses < 3 || maxGuesses > 9) {
-                    valid = 0;
-                    break;
+                    return 0;
                 }
 	        } else {
-    	    	valid = 0;
-                break;
+                return 0;
 	        }
         } else if (((int) argv[i][0]) == '-') {
-            valid = 0;
-            break;
+            return 0;
         } else if (atoi(argv[i]) == 0) {
             if (!dictionarySet) {
                 strcpy(dictionaryName, argv[i]);
                 FILE* dictionary = fopen(dictionaryName, "r");
                 if (dictionary == NULL) {
-                    printf("wordle:  dictionary file \"%s\" cannot be opened\n", dictionaryName);
+                    printf("wordle:  dictionary file \"%s\" cannot be \
+                            opened\n", dictionaryName);
                     fclose(dictionary);
-                    return 2;
+                    return 0;
                 }
                 fclose(dictionary);
                 dictionarySet = 1;
             } else {
-                valid = 0;
-                break;
+                return 0;
             }
         }
     }
 
-    if (!valid) {
-        printf("Usage: wordle [-len word-length] [-max max-guesses] [dictionary]\n");
-        return 1;
-    }
-
-    play_game(wordLength, maxGuesses, dictionaryName);
-    return 0;
+    return 1;
 }
 
 void play_game(int wordLength, int maxGuesses, char dictionaryName[]) {
@@ -85,9 +103,10 @@ void play_game(int wordLength, int maxGuesses, char dictionaryName[]) {
         if (i == 1) {
             printf("Enter a %d letter word (last attempt): ", wordLength);
         } else {
-            printf("Enter a %d letter word (%d attempts remaining): ", wordLength, i);
+            printf("Enter a %d letter word (%d attempts remaining): ",
+                    wordLength, i);
         }
-        
+         
         strcpy(guess, "");
         fgets(guess, MAX_WORD_LENGTH, stdin);
         guess[strcspn(guess, "\n")] = '\0';
