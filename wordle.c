@@ -69,9 +69,9 @@ int validate_arguments(int argc, char* argv[]) {
                     return 0;
                 }
                 guessesSet = 1;
-	        } else {
+	    } else {
                 return 0;
-	        }
+            }
         } else if (argv[i][0] == '-') {
             return 0;
         } else if (!atoi(argv[i])) {
