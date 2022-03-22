@@ -94,7 +94,12 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
                 exit(0);
             }
         } while (!validate_guess(guess, answer, wordLength, dictionaryPath));
-        printf("%s", report_matches(guess, answer)); 
+
+        if (check_dictionary(guess, dictionaryPath)) {
+            printf("%s\n", report_matches(answer, guess));
+        } else {
+            printf("Word not found in the dictionary - try again.\n");
+        } 
     }
 
     fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
@@ -128,19 +133,12 @@ int validate_guess(char guess[], char answer[], int wordLength,
     } else if (strlen(guess) != wordLength) { // guess is wrong size
         printf("Words must be %d letters long - try again.\n", wordLength);
         return 0;
-    } else { // guess is correct size
-        for (int j = 0; j < wordLength; j++) {
-            if (!isalpha(guess[j])) { // non-alpha character present
-                j++;
-                printf("Words must contain only letters - try again.\n");
-                return 0;
-            }
-        }
+    }
 
-        if (check_dictionary(guess, dictionaryPath)) {
-            printf("%s\n", report_matches(answer, guess));
-        } else {
-            printf("Word not found in the dictionary - try again.\n");
+    // word is correct length
+    for (int j = 0; guess[j]; j++) {
+        if (!isalpha(guess[j])) { // non-alpha character present
+            printf("Words must contain only letters - try again.\n");
             return 0;
         }
     }
