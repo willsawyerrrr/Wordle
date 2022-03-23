@@ -120,6 +120,10 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     }
     fgets(guess, MAX_WORD_LENGTH, stdin);
     guess[strcspn(guess, "\n")] = '\0';
+    
+    for (int i = 0; guess[i]; i++) {
+        guess[i] = tolower(guess[i]);
+    }
 
     if (feof(stdin)) { // no guess made
         fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
@@ -127,10 +131,6 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     } else if (!strcmp(guess, answer)) {
         printf("Correct!\n");
         exit(0);
-    }
-
-    for (int i = 0; guess[i]; i++) {
-        guess[i] = tolower(guess[i]);
     }
 
     return guess;
