@@ -47,7 +47,8 @@ int validate_arguments(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-len")) {
             if (++i < argc && !wordSet) {
-                if (atoi(argv[i]) < 3 || atoi(argv[i]) > 9) {
+                if (strlen(argv[i]) != 1 || atoi(argv[i]) < 3
+                        || atoi(argv[i]) > 9) {
                     return 0;
                 }
                 wordSet = 1;
@@ -56,7 +57,8 @@ int validate_arguments(int argc, char* argv[]) {
             } 
         } else if (!strcmp(argv[i], "-max")) {
             if (++i < argc && !guessesSet) {
-                if (atoi(argv[i]) < 3 || atoi(argv[i]) > 9) {
+                if (strlen(argv[i]) != 1 || atoi(argv[i]) < 3
+                        || atoi(argv[i]) > 9) {
                     return 0;
                 }
                 guessesSet = 1;
