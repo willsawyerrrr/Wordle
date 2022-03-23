@@ -6,11 +6,12 @@
 #include <string.h>
 
 #define MAX_WORD_LENGTH 52
+#define MAX_DICTIONARY_PATH_LENGTH 200
 
 int main(int argc, char* argv[]) {
     int wordLength = 5;
     int maxGuesses = 6;
-    char dictionaryPath[] = "/usr/share/dict/words";
+    char dictionaryPath[MAX_DICTIONARY_PATH_LENGTH] = "/usr/share/dict/words";
 
     if (!validate_arguments(argc, argv)) {
         fprintf(stderr, "Usage: wordle [-len word-length] [-max max-guesses] "
