@@ -86,15 +86,14 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
     char answer[wordLength];
     char* guess = malloc(wordLength);
     strcpy(answer, get_random_word(wordLength));
+    for (int i = 0; answer[i]; i++) {
+        answer[i] = tolower(answer[i]);
+    }
     
     for (int current = 1; current <= maxGuesses; current++) {
         int remainingGuesses = maxGuesses - current + 1;
         do {
             guess = get_guess(answer, wordLength, remainingGuesses);
-            if (!strcmp(guess, answer)) {
-                printf("Correct!\n");
-                exit(0);
-            }
         } while (!validate_guess(guess, answer, wordLength, dictionaryPath));
 
         if (check_dictionary(guess, dictionaryPath)) {
@@ -122,18 +121,24 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     fgets(guess, MAX_WORD_LENGTH, stdin);
     guess[strcspn(guess, "\n")] = '\0';
 
+    if (feof(stdin)) { // no guess made
+        fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
+        exit(3);
+    } else if (!strcmp(guess, answer)) {
+        printf("Correct!\n");
+        exit(0);
+    }
+
+    for (int i = 0; guess[i]; i++) {
+        guess[i] = tolower(guess[i]);
+    }
+
     return guess;
 }
 
 int validate_guess(char guess[], char answer[], int wordLength,
         char dictionaryPath[]) {
-    for (int i = 0; guess[i]; i++) {
-        guess[i] = tolower(guess[i]);
-    }
-
-    if (feof(stdin)) { // no guess made
-        return 0;
-    } else if (strlen(guess) != wordLength) { // guess is wrong size
+    if (strlen(guess) != wordLength) { // guess is wrong size
         printf("Words must be %d letters long - try again.\n", wordLength);
         return 0;
     }
@@ -145,36 +150,57 @@ int validate_guess(char guess[], char answer[], int wordLength,
             return 0;
         }
     }
+
     return 1;
 }
 
 int check_dictionary(char guess[], char dictionaryPath[]) {
     FILE* dictionary = fopen(dictionaryPath, "r");
     char word[MAX_WORD_LENGTH];
+
     while (fgets(word, MAX_WORD_LENGTH, dictionary) != NULL) {
         word[strcspn(word, "\n")] = 0;
         for (int i = 0; word[i]; i++) {
             word[i] = tolower(word[i]);
         }
         if (strcmp(word, guess) == 0) {
+            fclose(dictionary);
             return 1;
         }
     }
+
     fclose(dictionary);
     return 0;
 }
 
 char* report_matches(char guess[], char answer[]) {
-    char* matches = malloc(MAX_WORD_LENGTH);
+    char* matches = malloc(strlen(guess) + 1);
+    char answerCopy[strlen(guess)];
+    strcpy(answerCopy, answer);
     for (int i = 0; i < strlen(guess); i++) {
         matches[i] = '-';
     }
     matches[strlen(guess)] = '\0';
+
+    // checks for correctly positioned letters
     for (int i = 0; guess[i]; i++) {
         if (answer[i] == guess[i]) {
             matches[i] = toupper(guess[i]);
-        } else if (strchr(answer, guess[i]) != NULL) {
-            matches[i] = guess[i];
+            answerCopy[i] = '-';
+            guess[i] = '-';
+        }
+    }
+
+    // check incorrectly positioned letters
+    for (int i = 0; guess[i]; i++) {
+        for (int j = 0; guess[j]; j++) {
+            char guessLetter = guess[i];
+            char answerLetter = answerCopy[j];
+            if (guessLetter != '-' && guessLetter == answerLetter) {
+                matches[i] = guess[i];
+                answerCopy[j] = '-';
+                guess[i] = '-';
+            }
         }
     }
     return matches;
