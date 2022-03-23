@@ -96,7 +96,7 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
         } while (!validate_guess(guess, answer, wordLength, dictionaryPath));
 
         if (check_dictionary(guess, dictionaryPath)) {
-            printf("%s\n", report_matches(answer, guess));
+            printf("%s\n", report_matches(guess, answer));
         } else {
             printf("Word not found in the dictionary - try again.\n");
         } 
