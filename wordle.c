@@ -65,7 +65,7 @@ int validate_arguments(int argc, char* argv[]) {
             }
         } else if (argv[i][0] == '-') {
             return 0;
-        } else if (!atoi(argv[i])) {
+        } else if ((i + 1 == argc) && !atoi(argv[i])) {
             if (!dictionarySet) {
                 dictionarySet = 1;
             } else {
