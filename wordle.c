@@ -113,9 +113,9 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     strcpy(guess, "");
 
     if (remainingGuesses == 1) {
-        printf("Enter a %d letter word (last attempt): ", wordLength);
+        printf("Enter a %d letter word (last attempt):\n", wordLength);
     } else {
-        printf("Enter a %d letter word (%d attempts remaining): ",
+        printf("Enter a %d letter word (%d attempts remaining):\n",
                 wordLength, remainingGuesses);
     }
     fgets(guess, MAX_WORD_LENGTH, stdin);
