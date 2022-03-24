@@ -37,9 +37,9 @@ int main(int argc, char* argv[]) {
         return 2;
     }
     get_dictionary(dictionary, "dictionary", wordLength);
-    fclose(dictionary);
 
     play_game(wordLength, maxGuesses, dictionaryPath);
+    fclose(dictionary);
     return 0;
 }
 
