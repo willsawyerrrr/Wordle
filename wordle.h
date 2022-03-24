@@ -20,7 +20,7 @@ int validate_arguments(int argc, char* argv[]);
 /**
  *
  */
-void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
+FILE* get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
         int wordLength);
 
 /**

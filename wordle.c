@@ -32,13 +32,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    FILE* dictionary = fopen(dictionaryPath, "r");
-    if (!dictionary) {
+    FILE* readDictionary = fopen(dictionaryPath, "r");
+    if (!readDictionary) {
         fprintf(stderr, "wordle: dictionary file \"%s\" cannot be "
                 "opened\n", dictionaryPath);
         return 2;
     }
-    get_dictionary(dictionary, CUSTOM_DICTIONARY_PATH, wordLength);
+    FILE* dictionary = get_dictionary(readDictionary, CUSTOM_DICTIONARY_PATH,
+            wordLength);
 
     play_game(wordLength, maxGuesses, dictionaryPath);
     fclose(dictionary);
@@ -86,7 +87,7 @@ int validate_arguments(int argc, char* argv[]) {
     return 1;
 }
 
-void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
+FILE* get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
         int wordLength) {
     char word[MAX_WORD_LENGTH];
     FILE* writeDictionary = fopen(writeDictionaryPath, "w");
@@ -109,7 +110,8 @@ void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
         }
     }
 
-    fclose(writeDictionary);
+    fclose(readDictionary);
+    return writeDictionary;
 }
 
 void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
