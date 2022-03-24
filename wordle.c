@@ -119,17 +119,20 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
         printf("Enter a %d letter word (%d attempts remaining):\n",
                 wordLength, remainingGuesses);
     }
-    fgets(guess, MAX_WORD_LENGTH, stdin);
+    guess = fgets(guess, MAX_WORD_LENGTH, stdin);
+
+    if (!guess) { // no guess made
+        fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
+        exit(3);
+    }
+
     guess[strcspn(guess, "\n")] = '\0';
-    
+
     for (int i = 0; guess[i]; i++) {
         guess[i] = tolower(guess[i]);
     }
 
-    if (feof(stdin)) { // no guess made
-        fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
-        exit(3);
-    } else if (!strcmp(guess, answer)) {
+    if (!strcmp(guess, answer)) {
         printf("Correct!\n");
         exit(0);
     }
