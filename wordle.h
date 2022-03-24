@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /**
  * Entry point of this program, used to run a game of Wordle.
  *
@@ -14,6 +16,12 @@ int main(int argc, char* argv[]);
  * @return 1 if valid; 0 otherwise
  */
 int validate_arguments(int argc, char* argv[]);
+
+/**
+ *
+ */
+void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
+        int wordLength);
 
 /**
  * Control gameplay: generate answer; prompt for guesses; determine validity;

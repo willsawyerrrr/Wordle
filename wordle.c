@@ -27,15 +27,17 @@ int main(int argc, char* argv[]) {
             maxGuesses = atoi(argv[++i]);
         } else {
             strcpy(dictionaryPath, argv[i]);
-            FILE* dictionary = fopen(dictionaryPath, "r");
-            if (!dictionary) {
-                fprintf(stderr, "wordle: dictionary file \"%s\" cannot be "
-                        "opened\n", dictionaryPath);
-                return 2;
-            }
-            fclose(dictionary);
         }
     }
+
+    FILE* dictionary = fopen(dictionaryPath, "r");
+    if (!dictionary) {
+        fprintf(stderr, "wordle: dictionary file \"%s\" cannot be "
+                "opened\n", dictionaryPath);
+        return 2;
+    }
+    get_dictionary(dictionary, "dictionary", wordLength);
+    fclose(dictionary);
 
     play_game(wordLength, maxGuesses, dictionaryPath);
     return 0;
@@ -80,6 +82,30 @@ int validate_arguments(int argc, char* argv[]) {
     }
 
     return 1;
+}
+
+void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
+        int wordLength) {
+    char word[MAX_WORD_LENGTH];
+    FILE* writeDictionary = fopen(writeDictionaryPath, "w");
+
+    int valid = 1;
+    while (fgets(word, MAX_WORD_LENGTH, readDictionary)) {
+        word[strcspn(word, "\n")] = '\0';
+        valid = 1;
+        for (int i = 0; word[i]; i++) {
+            if (!isalpha(word[i])) {
+                valid = 0;
+                break;
+            }
+            word[i] = tolower(word[i]);
+        }
+        if (valid) {
+            fprintf(writeDictionary, "%s\n", word);
+        }
+    }
+
+    fclose(writeDictionary);
 }
 
 void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
@@ -162,7 +188,7 @@ int check_dictionary(char guess[], char dictionaryPath[]) {
     FILE* dictionary = fopen(dictionaryPath, "r");
     char word[MAX_WORD_LENGTH];
 
-    while (fgets(word, MAX_WORD_LENGTH, dictionary) != NULL) {
+    while (fgets(word, MAX_WORD_LENGTH, dictionary)) {
         word[strcspn(word, "\n")] = 0;
         for (int i = 0; word[i]; i++) {
             word[i] = tolower(word[i]);
