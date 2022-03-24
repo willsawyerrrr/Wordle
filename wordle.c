@@ -5,9 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* required buffer size to store maximum length word (50 char) */
 #define MAX_WORD_LENGTH 52
+/* maximum allowed length of dictionary argument */
 #define MAX_DICTIONARY_PATH_LENGTH 200
+/* path to default dictionary */
 #define DEFAULT_DICTIONARY_PATH "/usr/share/dict/words"
+/* path to dictionary with only words of correct length */
 #define CUSTOM_DICTIONARY_PATH "dictionary"
 
 int main(int argc, char* argv[]) {
