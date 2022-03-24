@@ -110,7 +110,7 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
 }
 
 char* get_guess(char answer[], int wordLength, int remainingGuesses) {
-    char* guess = malloc(wordLength + 1);
+    char* guess = malloc(MAX_WORD_LENGTH);
     strcpy(guess, "");
 
     if (remainingGuesses == 1) {
