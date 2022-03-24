@@ -54,8 +54,7 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses);
  *
  * @return 1 if valid; 0 otherwise
  */
-int validate_guess(char guess[], char answer[], int wordLength,
-        char dictionaryPath[]);
+int validate_guess(char guess[], char answer[], int wordLength);
 
 /**
  * Determine whether given guess is in the dictionary at given name.

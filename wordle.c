@@ -132,7 +132,7 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
         int remainingGuesses = maxGuesses - current + 1;
         do {
             guess = get_guess(answer, wordLength, remainingGuesses);
-        } while (!validate_guess(guess, answer, wordLength, dictionaryPath));
+        } while (!validate_guess(guess, answer, wordLength));
 
         if (check_dictionary(guess, dictionaryPath)) {
             printf("%s\n", report_matches(guess, answer));
@@ -177,8 +177,7 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     return guess;
 }
 
-int validate_guess(char guess[], char answer[], int wordLength,
-        char dictionaryPath[]) {
+int validate_guess(char guess[], char answer[], int wordLength) {
     if (strlen(guess) != wordLength) { // guess is wrong size
         printf("Words must be %d letters long - try again.\n", wordLength);
         return 0;
