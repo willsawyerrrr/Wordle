@@ -7,7 +7,7 @@
 
 #define MAX_WORD_LENGTH 52
 #define MAX_DICTIONARY_PATH_LENGTH 200
-#define DEFAULT_DICTIONARY PATH "/usr/share/dict/words"
+#define DEFAULT_DICTIONARY_PATH "/usr/share/dict/words"
 #define CUSTOM_DICTIONARY_PATH "dictionary"
 
 int main(int argc, char* argv[]) {
@@ -94,16 +94,18 @@ void get_dictionary(FILE* readDictionary, char writeDictionaryPath[],
     int valid = 1;
     while (fgets(word, MAX_WORD_LENGTH, readDictionary)) {
         word[strcspn(word, "\n")] = '\0';
-        valid = 1;
-        for (int i = 0; word[i]; i++) {
-            if (!isalpha(word[i])) {
-                valid = 0;
-                break;
+        if (strlen(word) == wordLength) {
+            valid = 1;
+            for (int i = 0; word[i]; i++) {
+                if (!isalpha(word[i])) {
+                    valid = 0;
+                    break;
+                }
+                word[i] = tolower(word[i]);
             }
-            word[i] = tolower(word[i]);
-        }
-        if (valid) {
-            fprintf(writeDictionary, "%s\n", word);
+            if (valid) {
+                fprintf(writeDictionary, "%s\n", word);
+            }
         }
     }
 
