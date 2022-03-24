@@ -7,11 +7,13 @@
 
 #define MAX_WORD_LENGTH 52
 #define MAX_DICTIONARY_PATH_LENGTH 200
+#define DEFAULT_DICTIONARY PATH "/usr/share/dict/words"
+#define CUSTOM_DICTIONARY_PATH "dictionary"
 
 int main(int argc, char* argv[]) {
     int wordLength = 5;
     int maxGuesses = 6;
-    char dictionaryPath[MAX_DICTIONARY_PATH_LENGTH] = "/usr/share/dict/words";
+    char dictionaryPath[MAX_DICTIONARY_PATH_LENGTH] = DEFAULT_DICTIONARY_PATH;
 
     if (!validate_arguments(argc, argv)) {
         fprintf(stderr, "Usage: wordle [-len word-length] [-max max-guesses] "
@@ -36,7 +38,7 @@ int main(int argc, char* argv[]) {
                 "opened\n", dictionaryPath);
         return 2;
     }
-    get_dictionary(dictionary, "dictionary", wordLength);
+    get_dictionary(dictionary, CUSTOM_DICTIONARY_PATH, wordLength);
 
     play_game(wordLength, maxGuesses, dictionaryPath);
     fclose(dictionary);
