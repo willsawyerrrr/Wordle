@@ -48,12 +48,11 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses);
  * Determine whether given guess is valid.
  *
  * @param guess word to check for validity
- * @param answer word to be guessed
  * @param wordLength length of the word to be guessed
  *
  * @return 1 if valid; 0 otherwise
  */
-int validate_guess(char guess[], char answer[], int wordLength);
+int validate_guess(char guess[], int wordLength);
 
 /**
  * Determine whether given guess is in the dictionary at given name.

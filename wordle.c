@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     FILE* dictionary = get_dictionary(dictionaryPath, CUSTOM_DICTIONARY_PATH,
             wordLength);
 
-    play_game(wordLength, maxGuesses, dictionaryPath);
+    play_game(wordLength, maxGuesses, dictionary);
     fclose(dictionary);
     return 0;
 }
@@ -119,7 +119,7 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
     return writeDictionary;
 }
 
-void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
+void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     printf("Welcome to Wordle!\n");
     char answer[wordLength];
     char* guess = malloc(wordLength);
@@ -129,9 +129,9 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
         int remainingGuesses = maxGuesses - current + 1;
         do {
             guess = get_guess(answer, wordLength, remainingGuesses);
-        } while (!validate_guess(guess, answer, wordLength));
+        } while (!validate_guess(guess, wordLength));
 
-        if (check_dictionary(guess, dictionaryPath)) {
+        if (check_dictionary(guess, dictionary)) {
             printf("%s\n", report_matches(guess, answer));
         } else {
             printf("Word not found in the dictionary - try again.\n");
@@ -174,7 +174,7 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
     return guess;
 }
 
-int validate_guess(char guess[], char answer[], int wordLength) {
+int validate_guess(char guess[], int wordLength) {
     if (strlen(guess) != wordLength) { // guess is wrong size
         printf("Words must be %d letters long - try again.\n", wordLength);
         return 0;
@@ -191,22 +191,17 @@ int validate_guess(char guess[], char answer[], int wordLength) {
     return 1;
 }
 
-int check_dictionary(char guess[], char dictionaryPath[]) {
-    FILE* dictionary = fopen(dictionaryPath, "r");
+int check_dictionary(char guess[], FILE* dictionary) {
+    rewind(dictionary); // ensure file is read from the beginning
     char word[MAX_WORD_LENGTH];
 
     while (fgets(word, MAX_WORD_LENGTH, dictionary)) {
         word[strcspn(word, "\n")] = 0;
-        for (int i = 0; word[i]; i++) {
-            word[i] = tolower(word[i]);
-        }
         if (strcmp(word, guess) == 0) {
-            fclose(dictionary);
             return 1;
         }
     }
 
-    fclose(dictionary);
     return 0;
 }
 
