@@ -36,10 +36,12 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    FILE* dictionary = get_dictionary(dictionaryPath, CUSTOM_DICTIONARY_PATH,
+    get_dictionary(dictionaryPath, CUSTOM_DICTIONARY_PATH,
             wordLength);
 
-    play_game(wordLength, maxGuesses, dictionaryPath);
+    FILE* dictionary = fopen(CUSTOM_DICTIONARY_PATH, "r");
+
+    play_game(wordLength, maxGuesses, dictionary);
     fclose(dictionary);
     return 0;
 }
@@ -119,7 +121,7 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
     return writeDictionary;
 }
 
-void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
+void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     printf("Welcome to Wordle!\n");
     char answer[wordLength];
     char* guess = malloc(wordLength);
@@ -134,7 +136,7 @@ void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
             guess = get_guess(answer, wordLength, remainingGuesses);
         } while (!validate_guess(guess, answer, wordLength));
 
-        if (check_dictionary(guess, dictionaryPath)) {
+        if (check_dictionary(guess, dictionary)) {
             printf("%s\n", report_matches(guess, answer));
         } else {
             printf("Word not found in the dictionary - try again.\n");
@@ -194,8 +196,7 @@ int validate_guess(char guess[], char answer[], int wordLength) {
     return 1;
 }
 
-int check_dictionary(char guess[], char dictionaryPath[]) {
-    FILE* dictionary = fopen(dictionaryPath, "r");
+int check_dictionary(char guess[], FILE* dictionary) {
     char word[MAX_WORD_LENGTH];
 
     while (fgets(word, MAX_WORD_LENGTH, dictionary)) {
@@ -204,12 +205,12 @@ int check_dictionary(char guess[], char dictionaryPath[]) {
             word[i] = tolower(word[i]);
         }
         if (strcmp(word, guess) == 0) {
-            fclose(dictionary);
+            rewind(dictionary);
             return 1;
         }
     }
 
-    fclose(dictionary);
+    rewind(dictionary);
     return 0;
 }
 
