@@ -36,12 +36,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    get_dictionary(dictionaryPath, CUSTOM_DICTIONARY_PATH,
+    FILE* dictionary = get_dictionary(dictionaryPath, CUSTOM_DICTIONARY_PATH,
             wordLength);
 
-    FILE* dictionary = fopen(CUSTOM_DICTIONARY_PATH, "r");
-
-    play_game(wordLength, maxGuesses, dictionary);
+    play_game(wordLength, maxGuesses, dictionaryPath);
     fclose(dictionary);
     return 0;
 }
@@ -121,14 +119,11 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
     return writeDictionary;
 }
 
-void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
+void play_game(int wordLength, int maxGuesses, char dictionaryPath[]) {
     printf("Welcome to Wordle!\n");
     char answer[wordLength];
     char* guess = malloc(wordLength);
     strcpy(answer, get_random_word(wordLength));
-    for (int i = 0; answer[i]; i++) {
-        answer[i] = tolower(answer[i]);
-    }
     
     for (int current = 1; current <= maxGuesses; current++) {
         int remainingGuesses = maxGuesses - current + 1;
@@ -136,7 +131,7 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
             guess = get_guess(answer, wordLength, remainingGuesses);
         } while (!validate_guess(guess, answer, wordLength));
 
-        if (check_dictionary(guess, dictionary)) {
+        if (check_dictionary(guess, dictionaryPath)) {
             printf("%s\n", report_matches(guess, answer));
         } else {
             printf("Word not found in the dictionary - try again.\n");
@@ -196,7 +191,8 @@ int validate_guess(char guess[], char answer[], int wordLength) {
     return 1;
 }
 
-int check_dictionary(char guess[], FILE* dictionary) {
+int check_dictionary(char guess[], char dictionaryPath[]) {
+    FILE* dictionary = fopen(dictionaryPath, "r");
     char word[MAX_WORD_LENGTH];
 
     while (fgets(word, MAX_WORD_LENGTH, dictionary)) {
@@ -205,12 +201,12 @@ int check_dictionary(char guess[], FILE* dictionary) {
             word[i] = tolower(word[i]);
         }
         if (strcmp(word, guess) == 0) {
-            rewind(dictionary);
+            fclose(dictionary);
             return 1;
         }
     }
 
-    rewind(dictionary);
+    fclose(dictionary);
     return 0;
 }
 
