@@ -153,9 +153,8 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses) {
         printf("Enter a %d letter word (%d attempts remaining):\n",
                 wordLength, remainingGuesses);
     }
-    guess = fgets(guess, MAX_WORD_LENGTH, stdin);
 
-    if (!guess) { // no guess made
+    if (!fgets(guess, MAX_WORD_LENGTH, stdin)) { // no guess made
         fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
         exit(3);
     }
