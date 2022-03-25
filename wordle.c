@@ -122,13 +122,13 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
 void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     printf("Welcome to Wordle!\n");
     char answer[wordLength];
-    char* guess = malloc(wordLength);
     strcpy(answer, get_random_word(wordLength));
+    char guess[wordLength];
     
     for (int current = 1; current <= maxGuesses; current++) {
         int remainingGuesses = maxGuesses - current + 1;
         do {
-            guess = get_guess(answer, wordLength, remainingGuesses);
+            strcpy(guess, get_guess(answer, wordLength, remainingGuesses));
         } while (!validate_guess(guess, wordLength));
 
         if (check_dictionary(guess, dictionary)) {
