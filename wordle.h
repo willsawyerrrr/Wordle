@@ -20,7 +20,7 @@ int validate_arguments(int argc, char* argv[]);
 /**
  *
  */
-FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
+void get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
         int wordLength);
 
 /**
@@ -29,9 +29,9 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
  *
  * @param wordLength length of the word to be guessed
  * @param maxGuesses maximum number of guesses allowed
- * @param dictionaryPath path to dictionary file
+ * @param dictionary dictionary file
  */
-void play_game(int wordLength, int maxGuesses, char dictionaryPath[]);
+void play_game(int wordLength, int maxGuesses, FILE* dictionary);
 
 /**
  * Prompt user for a guess.
@@ -50,7 +50,6 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses);
  * @param guess word to check for validity
  * @param answer word to be guessed
  * @param wordLength length of the word to be guessed
- * @param dictionaryPath path to dictionary file
  *
  * @return 1 if valid; 0 otherwise
  */
@@ -60,11 +59,11 @@ int validate_guess(char guess[], char answer[], int wordLength);
  * Determine whether given guess is in the dictionary at given name.
  *
  * @param guess word to check in dictionary
- * @param dictionaryPath path to dictionary file
+ * @param dictionary dictionary file
  *
  * @return 1 if guess in dictionary; 0 otherwise
  */
-int check_dictionary(char guess[], char dictionaryPath[]);
+int check_dictionary(char guess[], FILE* dictionary);
 
 /**
  * Report matching letters in guess:
