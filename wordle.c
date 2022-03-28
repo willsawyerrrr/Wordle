@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* required buffer size to store maximum length word (50 char) */
+/* required buffer size to store maximum length word (50 char + '\n' + '\0') */
 #define MAX_WORD_LENGTH 52
 /* maximum allowed length of dictionary argument */
 #define MAX_DICTIONARY_PATH_LENGTH 200
