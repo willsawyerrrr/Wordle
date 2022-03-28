@@ -61,15 +61,12 @@ int validate_arguments(int argc, char* argv[]) {
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-len")) { // current argument is '-len'
             if (!wordSet && ++i < argc) {
-                /* 
-                 * ensure wordLength is not set and that there is a next
-                 * argument
+                /* ensure wordLength is not set and another argument exists
                  *
-                 * uses ++i to obtain the next index and then (below) argv[i]
-                 * to obtain next argument (maxGuesses) and ensure it is not
-                 * found during the loop, since the update statement of the for
-                 * loop will increment i further before another argument is
-                 * checked
+                 * ++i obtains the next index and then argv[i] obtains the next
+                 * argument (maxGuesses) and ensure it is not found during the
+                 * loop, since the update statement of the for loop will
+                 * increment i further before another argument is checked
                  */
                 if (strlen(argv[i]) != 1 || atoi(argv[i]) < 3
                         || atoi(argv[i]) > 9) {
@@ -105,7 +102,6 @@ int validate_arguments(int argc, char* argv[]) {
         }
     }
 
-    // all checks have been passed - arguments are valid
     return 1;
 }
 
