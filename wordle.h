@@ -34,15 +34,16 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
 void play_game(int wordLength, int maxGuesses, FILE* dictionary);
 
 /**
- * Prompt user for a guess.
+ * Prompt player for a guess. Guess is stored to the address given by the guess
+ * parameter.
  *
+ * @param guess pointer to string in which to place the guess
  * @param answer the word to be guessed
  * @param wordLength length of the word to be guessed
  * @param remainingGuesses number of guesses remaining
- *
- * @return pointer to guess
  */
-char* get_guess(char answer[], int wordLength, int remainingGuesses);
+void get_guess(char* guess, char* answer, int wordLength,
+        int remainingGuesses);
 
 /**
  * Determine whether given guess is valid, based off its length and characters.
@@ -52,7 +53,7 @@ char* get_guess(char answer[], int wordLength, int remainingGuesses);
  *
  * @return 1 if valid; 0 otherwise
  */
-int validate_guess(char guess[], int wordLength);
+int validate_guess(char* guess, int wordLength);
 
 /**
  * Determine whether given guess is in the dictionary at given name.
@@ -62,7 +63,7 @@ int validate_guess(char guess[], int wordLength);
  *
  * @return 1 if guess in dictionary; 0 otherwise
  */
-int check_dictionary(char guess[], FILE* dictionary);
+int check_dictionary(char* guess, FILE* dictionary);
 
 /**
  * Report matching letters in guess:
