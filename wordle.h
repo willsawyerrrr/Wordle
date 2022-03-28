@@ -1,10 +1,5 @@
 #include <stdio.h>
 
-/**
- * Entry point of this program, used to run a game of Wordle.
- *
- * Usage: ./wordle [-len word-length] [-max max-guesses] [dictionary]
- */
 int main(int argc, char* argv[]);
 
 /**

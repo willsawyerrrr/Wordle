@@ -219,7 +219,7 @@ int check_dictionary(char* guess, FILE* dictionary) {
     char word[MAX_WORD_LENGTH];
 
     while (fgets(word, MAX_WORD_LENGTH, dictionary)) {
-        word[strcspn(word, "\n")] = '\0';
+        word[strcspn(word, "\n")] = '\0'; // replace '\n' with '\0'
         if (!strcmp(word, guess)) {
             return 1;
         }
@@ -230,28 +230,34 @@ int check_dictionary(char* guess, FILE* dictionary) {
 
 char* report_matches(char* guess, char* answer) {
     char* matches = malloc(strlen(guess) + 1);
+
+    // answer copied to allow repeated letter handling without changing answer
     char answerCopy[strlen(guess)];
     strcpy(answerCopy, answer);
     for (int i = 0; i < strlen(guess); i++) {
         matches[i] = '-';
     }
-    matches[strlen(guess)] = '\0';
+    matches[strlen(guess)] = '\0'; // replace '\n' with '\0'
 
     // checks for correctly positioned letters
     for (int i = 0; guess[i]; i++) {
         if (answer[i] == guess[i]) {
             matches[i] = toupper(guess[i]);
+
+            // correctly guessed letter no longer appears in checked answer
+            // or guess, hence, it will not be matched twice (or more)
             answerCopy[i] = '-';
             guess[i] = '-';
         }
     }
 
-    // check incorrectly positioned letters
+    // check for incorrectly positioned letters
     for (int i = 0; guess[i]; i++) {
         for (int j = 0; answer[j]; j++) {
             char guessLetter = guess[i];
             char answerLetter = answerCopy[j];
             if (guessLetter != '-' && guessLetter == answerLetter) {
+                // letter has not already been matched and now matches a letter
                 matches[i] = guess[i];
                 answerCopy[j] = '-';
                 guess[i] = '-';
