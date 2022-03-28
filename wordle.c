@@ -15,6 +15,7 @@
 #define CUSTOM_DICTIONARY_PATH "dictionary"
 
 int main(int argc, char* argv[]) {
+    // default game arguments
     int wordLength = 5;
     int maxGuesses = 6;
     char dictionaryPath[MAX_DICTIONARY_PATH_LENGTH] = DEFAULT_DICTIONARY_PATH;
@@ -27,9 +28,18 @@ int main(int argc, char* argv[]) {
 
     // arguments are valid - use arguments
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-len") == 0) {
+        if (!strcmp(argv[i], "-len")) {
+            /* 
+             * if the current argument is '-len', the next argument must be
+             * the wordLength argument, since we know the arguments are valid
+             *
+             * uses argv[++i] to obtain the next argument (wordLength) and
+             * ensure it is not found during the loop, since the update
+             * statement of the for loop will increment i further before
+             * another argument is checked to be '-len' or '-max'
+             */
             wordLength = atoi(argv[++i]);
-        } else if (strcmp(argv[i], "-max") == 0) {
+        } else if (!strcmp(argv[i], "-max")) {
             maxGuesses = atoi(argv[++i]);
         } else {
             strcpy(dictionaryPath, argv[i]);
@@ -49,10 +59,21 @@ int validate_arguments(int argc, char* argv[]) {
     int guessesSet = 0;
     int dictionarySet = 0;
     for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-len")) {
-            if (++i < argc && !wordSet) {
+        if (!strcmp(argv[i], "-len")) { // current argument is '-len'
+            if (!wordSet && ++i < argc) {
+                /* 
+                 * ensure wordLength is not set and that there is a next
+                 * argument
+                 *
+                 * uses ++i to obtain the next index and then (below) argv[i]
+                 * to obtain next argument (maxGuesses) and ensure it is not
+                 * found during the loop, since the update statement of the for
+                 * loop will increment i further before another argument is
+                 * checked
+                 */
                 if (strlen(argv[i]) != 1 || atoi(argv[i]) < 3
                         || atoi(argv[i]) > 9) {
+                    // wordLength argument is non-numeric or is out of bounds
                     return 0;
                 }
                 wordSet = 1;
@@ -60,7 +81,7 @@ int validate_arguments(int argc, char* argv[]) {
                 return 0;
             } 
         } else if (!strcmp(argv[i], "-max")) {
-            if (++i < argc && !guessesSet) {
+            if (!guessesSet && ++i < argc) {
                 if (strlen(argv[i]) != 1 || atoi(argv[i]) < 3
                         || atoi(argv[i]) > 9) {
                     return 0;
@@ -70,8 +91,10 @@ int validate_arguments(int argc, char* argv[]) {
                 return 0;
             }
         } else if (argv[i][0] == '-') {
+            // starts with '-' but is not '-len' or '-max'
             return 0;
         } else if ((i + 1 == argc) && !atoi(argv[i])) {
+            // ensure this is the final argument and that it is non-numeric
             if (!dictionarySet) {
                 dictionarySet = 1;
             } else {
@@ -82,6 +105,7 @@ int validate_arguments(int argc, char* argv[]) {
         }
     }
 
+    // all checks have been passed - arguments are valid
     return 1;
 }
 
@@ -97,9 +121,10 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
     char word[MAX_WORD_LENGTH];
     FILE* writeDictionary = fopen(writeDictionaryPath, "w+");
 
-    int valid = 1;
+    int valid;
     while (fgets(word, MAX_WORD_LENGTH, readDictionary)) {
-        word[strcspn(word, "\n")] = '\0';
+        // there are more words in the read dictionary
+        word[strcspn(word, "\n")] = '\0'; // replace '\n' with '\0'
         if (strlen(word) == wordLength) {
             valid = 1;
             for (int i = 0; word[i]; i++) {
@@ -126,6 +151,7 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     char guess[wordLength];
     
     for (int current = 1; current <= maxGuesses; current++) {
+        // +1 to below to account for program's zero-indexing
         int remainingGuesses = maxGuesses - current + 1;
         do {
             strcpy(guess, get_guess(answer, wordLength, remainingGuesses));
@@ -135,10 +161,11 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
             printf("%s\n", report_matches(guess, answer));
         } else {
             printf("Word not found in the dictionary - try again.\n");
-            current--;
-        } 
+            current--; // ensure invalid word does not waste a guess
+        }
     }
 
+    // word hasn't been guessed yet - player loses
     fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
     exit(3);
 }
