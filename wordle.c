@@ -131,6 +131,7 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
                 word[i] = tolower(word[i]);
             }
             if (valid) {
+                // add word to writeDictionary
                 fprintf(writeDictionary, "%s\n", word);
             }
         }
@@ -178,6 +179,8 @@ void get_guess(char* guess, char* answer, int wordLength,
 
     if (!fgets(guess, MAX_WORD_LENGTH, stdin)) { // no guess made
         fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
+        free(answer);
+        free(guess);
         exit(3);
     }
 
@@ -189,6 +192,8 @@ void get_guess(char* guess, char* answer, int wordLength,
 
     if (!strcmp(guess, answer)) {
         printf("Correct!\n");
+        free(answer);
+        free(guess);
         exit(0);
     }
 }
