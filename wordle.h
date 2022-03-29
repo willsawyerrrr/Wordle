@@ -1,3 +1,6 @@
+#ifndef WORDLE_H
+#define WORDLE_H
+
 #include <stdio.h>
 
 int main(int argc, char* argv[]);
@@ -96,3 +99,4 @@ int check_dictionary(char* guess, FILE* dictionary);
  */
 void report_matches(char* guess, char* answer);
 
+endif
