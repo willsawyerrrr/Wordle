@@ -2,80 +2,97 @@
 
 int main(int argc, char* argv[]);
 
-/**
- * Determine whether given command line arguments are valid.
+/* validate_arguments()
+ * --------------------
+ * Determines whether the given command line arguments are valid.
  *
- * @param argc number of command line arguments given, including program name
- * @param argv pointer to array of command line arguments
+ * argc: number of command line arguments given, including program name
+ * argv: array of command line arguments
  *
- * @return 1 if valid; 0 otherwise
+ * Returns: 1 if the command line arguments are valid; 0 otherwise
  */
 int validate_arguments(int argc, char* argv[]);
 
-/**
+/* get_dictionary()
+ * ----------------
  * Creates a dictionary which contains only valid (purely alphabetical) words
  * of the correct length.
  *
- * @param readDictionaryPath filepath of the full dictionary
- * @param writeDictionaryPath filepath of the dictionary to create/update
- * @param wordLength length of words to add to dictionary
+ * readDictionaryPath: filepath of the full dictionary
+ * writeDictionaryPath: filepath of the dictionary to create/update
+ * wordLength: length of words to add to dictionary
  *
- * @return dictionary containing only valid words of the correct length
+ * Returns: dictionary containing only valid words of the correct length
+ * Errors: if the dictionary given by readDictionaryPath cannot be opened,
+ *          the program exits with code 2
  */
 FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
         int wordLength);
 
-/**
- * Control gameplay: generate answer; prompt for guesses; determine validity;
- * return matches; end game.
+/* play_game()
+ * ----------
+ * Controls gameplay by managing calls to other functions.
  *
- * @param wordLength length of the word to be guessed
- * @param maxGuesses maximum number of guesses allowed
- * @param dictionary dictionary file
+ * wordLength: length of the word to be guessed
+ * maxGuesses: maximum number of guesses allowed
+ * dictionary: dictionary file of valid words
+ *
+ * Errors: if the player uses all guesses without guessing the correct answer,
+ *          the program exits with code 3
  */
 void play_game(int wordLength, int maxGuesses, FILE* dictionary);
 
-/**
- * Prompt player for a guess. Guess is stored to the address given by the guess
- * parameter.
+/* get_guess()
+ * -----------
+ * Prompts the player for a guess and stores the guess in the given guess
+ * buffer.
  *
- * @param guess pointer to buffer in which to place the guess
- * @param answer pointer to the word to be guessed
- * @param wordLength length of the word to be guessed
- * @param remainingGuesses number of guesses remaining
- * @param dictionary dictionary file
+ * guess: buffer in which to store the guess
+ * answer: the word to be guessed
+ * wordLength: length of the word to be guessed
+ * remainingGuesses: number of guesses remaining
+ * dictionary: dictionary file
+ *
+ * Errors: if the player correctly guesses the answer, the program exits with
+ *          code 0
+ *         if EOF is reached (player presses Ctrl-D), the program exits with
+ *          code 3
  */
 void get_guess(char* guess, char* answer, int wordLength,
         int remainingGuesses, FILE* dictionary);
 
-/**
- * Determine whether given guess is valid, based off its length and characters.
+/* validate_guess()
+ * ----------------
+ * Determine whether the given guess is valid, based off its length and
+ * characters.
  *
- * @param guess pointer to word to check for validity
- * @param wordLength length of the word to be guessed
+ * guess: word to check for validity
+ * wordLength: length of the word to be guessed
  *
- * @return 1 if valid; 0 otherwise
+ * Returns: 1 if the given guess is valid; 0 otherwise
  */
 int validate_guess(char* guess, int wordLength);
 
-/**
- * Determine whether given guess is in the dictionary at given name.
+/* check_dictionary()
+ * ------------------
+ * Determine whether the given guess is in the given dictionary.
  *
- * @param guess pointer to word to check in dictionary
- * @param dictionary dictionary file
+ * guess: guess to check for in dictionary
+ * dictionary: dictionary file
  *
- * @return 1 if guess in dictionary; 0 otherwise
+ * Returns: 1 if the given guess in the given dictionary; 0 otherwise
  */
 int check_dictionary(char* guess, FILE* dictionary);
 
-/**
- * Print matching letters in guess to the console:
- *     - correctly positioned letters are uppercase 'A'
- *     - incorrectly positioned letters are lowercase 'a'
- *     - unmatched letters are replaced with hyphens '-'
+/* report_matches()
+ * ----------------
+ * Prints matching letters in guess to the console:
+ *     - correctly positioned letters are reported as uppercase
+ *     - incorrectly positioned letters are reported as lowercase
+ *     - unmatched letters are reported as with hyphens
  * 
- * @param guess pointer to word to be checked for validity
- * @param answer pointer to word to be guessed
+ * guess: word guessed by the player
+ * answer: word to be guessed
  */
 void report_matches(char* guess, char* answer);
 
