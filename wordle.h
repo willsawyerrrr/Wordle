@@ -13,7 +13,14 @@ int main(int argc, char* argv[]);
 int validate_arguments(int argc, char* argv[]);
 
 /**
+ * Creates a dictionary which contains only valid (purely alphabetical) words
+ * of the correct length.
  *
+ * @param readDictionaryPath filepath of the full dictionary
+ * @param writeDictionaryPath filepath of the dictionary to create/update
+ * @param wordLength length of words to add to dictionary
+ *
+ * @return dictionary containing only valid words of the correct length
  */
 FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
         int wordLength);
@@ -32,10 +39,11 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary);
  * Prompt player for a guess. Guess is stored to the address given by the guess
  * parameter.
  *
- * @param guess pointer to string in which to place the guess
- * @param answer the word to be guessed
+ * @param guess pointer to buffer in which to place the guess
+ * @param answer pointer to the word to be guessed
  * @param wordLength length of the word to be guessed
  * @param remainingGuesses number of guesses remaining
+ *
  */
 void get_guess(char* guess, char* answer, int wordLength,
         int remainingGuesses);
@@ -43,7 +51,7 @@ void get_guess(char* guess, char* answer, int wordLength,
 /**
  * Determine whether given guess is valid, based off its length and characters.
  *
- * @param guess word to check for validity
+ * @param guess pointer to word to check for validity
  * @param wordLength length of the word to be guessed
  *
  * @return 1 if valid; 0 otherwise
@@ -53,7 +61,7 @@ int validate_guess(char* guess, int wordLength);
 /**
  * Determine whether given guess is in the dictionary at given name.
  *
- * @param guess word to check in dictionary
+ * @param guess pointer to word to check in dictionary
  * @param dictionary dictionary file
  *
  * @return 1 if guess in dictionary; 0 otherwise
@@ -61,15 +69,13 @@ int validate_guess(char* guess, int wordLength);
 int check_dictionary(char* guess, FILE* dictionary);
 
 /**
- * Report matching letters in guess:
+ * Print matching letters in guess to the console:
  *     - correctly positioned letters are uppercase 'A'
  *     - incorrectly positioned letters are lowercase 'a'
  *     - unmatched letters are replaced with hyphens '-'
  * 
- * @param guess word to be checked for validity
- * @param answer word to be guessed
- * 
- * @return pointer to string of matches
+ * @param guess pointer to word to be checked for validity
+ * @param answer pointer to word to be guessed
  */
-char* report_matches(char guess[], char answer[]);
+void report_matches(char* guess, char* answer);
 
