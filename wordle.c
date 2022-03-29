@@ -145,16 +145,15 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     printf("Welcome to Wordle!\n");
     char* answer = get_random_word(wordLength);
     char* guess = malloc(MAX_WORD_LENGTH);
-    
-    for (int current = 1; current <= maxGuesses; current++) {
-        // +1 to below to account for program's zero-indexing
-        int remainingGuesses = maxGuesses - current + 1;
+
+    for (int current = 0; current < maxGuesses; current++) {
+        int remainingGuesses = maxGuesses - current;
         do {
             get_guess(guess, answer, wordLength, remainingGuesses);
         } while (!validate_guess(guess, wordLength));
 
         if (check_dictionary(guess, dictionary)) {
-            printf("%s\n", report_matches(guess, answer));
+            report_matches(guess, answer);
         } else {
             printf("Word not found in the dictionary - try again.\n");
             current--; // ensure invalid word does not waste a guess
@@ -229,7 +228,7 @@ int check_dictionary(char* guess, FILE* dictionary) {
     return 0;
 }
 
-char* report_matches(char* guess, char* answer) {
+void report_matches(char* guess, char* answer) {
     char* matches = malloc(strlen(guess) + 1);
 
     // answer copied to allow repeated letter handling without changing answer
@@ -265,6 +264,8 @@ char* report_matches(char* guess, char* answer) {
             }
         }
     }
-    return matches;
+
+    printf("%s\n", matches);
+    free(matches);
 }
 
