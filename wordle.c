@@ -14,6 +14,13 @@
 /* path to dictionary with only words of correct length */
 #define CUSTOM_DICTIONARY_PATH "dictionary"
 
+enum ExitCodes {
+    GAME_WON = 0,
+    INVALID_ARGS = 1,
+    INVALID_DICTIONARY = 2,
+    GAME_LOST = 3,
+};
+
 int main(int argc, char* argv[]) {
     // default game arguments
     int wordLength = 5;
@@ -23,7 +30,7 @@ int main(int argc, char* argv[]) {
     if (!validate_arguments(argc, argv)) {
         fprintf(stderr, "Usage: wordle [-len word-length] [-max max-guesses] "
                 "[dictionary]\n");
-        return 1;
+        return INVALID_ARGS;
     }
 
     // arguments are valid - use arguments
@@ -51,7 +58,7 @@ int main(int argc, char* argv[]) {
 
     play_game(wordLength, maxGuesses, dictionary);
     fclose(dictionary);
-    return 0;
+    return GAME_WON;
 }
 
 int validate_arguments(int argc, char* argv[]) {
@@ -111,7 +118,7 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
     if (!readDictionary) {
         fprintf(stderr, "wordle: dictionary file \"%s\" cannot be "
                 "opened\n", readDictionaryPath);
-        exit(2);
+        exit(INVALID_DICTIONARY);
     }
 
     char word[MAX_WORD_LENGTH];
@@ -165,11 +172,11 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     free(answer);
     free(guess);
     fclose(dictionary);
-    exit(3);
+    exit(GAME_LOST);
 }
 
-void get_guess(char* guess, char* answer, int wordLength,
-        int remainingGuesses, FILE* dictionary) {
+void get_guess(char* guess, char* answer, int wordLength, int remainingGuesses,
+        FILE* dictionary) {
     if (remainingGuesses == 1) {
         printf("Enter a %d letter word (last attempt):\n", wordLength);
     } else {
@@ -182,7 +189,7 @@ void get_guess(char* guess, char* answer, int wordLength,
         free(answer);
         free(guess);
         fclose(dictionary);
-        exit(3);
+        exit(GAME_LOST);
     }
 
     guess[strcspn(guess, "\n")] = '\0';
@@ -196,7 +203,7 @@ void get_guess(char* guess, char* answer, int wordLength,
         free(answer);
         free(guess);
         fclose(dictionary);
-        exit(0);
+        exit(GAME_WON);
     }
 }
 
