@@ -99,4 +99,4 @@ int check_dictionary(char* guess, FILE* dictionary);
  */
 void report_matches(char* guess, char* answer);
 
-endif
+#endif
