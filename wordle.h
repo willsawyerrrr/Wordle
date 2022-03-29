@@ -43,10 +43,10 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary);
  * @param answer pointer to the word to be guessed
  * @param wordLength length of the word to be guessed
  * @param remainingGuesses number of guesses remaining
- *
+ * @param dictionary dictionary file
  */
 void get_guess(char* guess, char* answer, int wordLength,
-        int remainingGuesses);
+        int remainingGuesses, FILE* dictionary);
 
 /**
  * Determine whether given guess is valid, based off its length and characters.

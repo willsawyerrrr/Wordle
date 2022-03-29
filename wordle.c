@@ -149,7 +149,7 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     for (int current = 0; current < maxGuesses; current++) {
         int remainingGuesses = maxGuesses - current;
         do {
-            get_guess(guess, answer, wordLength, remainingGuesses);
+            get_guess(guess, answer, wordLength, remainingGuesses, dictionary);
         } while (!validate_guess(guess, wordLength));
 
         if (check_dictionary(guess, dictionary)) {
@@ -164,11 +164,12 @@ void play_game(int wordLength, int maxGuesses, FILE* dictionary) {
     fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
     free(answer);
     free(guess);
+    fclose(dictionary);
     exit(3);
 }
 
 void get_guess(char* guess, char* answer, int wordLength,
-        int remainingGuesses) {
+        int remainingGuesses, FILE* dictionary) {
     if (remainingGuesses == 1) {
         printf("Enter a %d letter word (last attempt):\n", wordLength);
     } else {
@@ -180,6 +181,7 @@ void get_guess(char* guess, char* answer, int wordLength,
         fprintf(stderr, "Bad luck - the word is \"%s\".\n", answer);
         free(answer);
         free(guess);
+        fclose(dictionary);
         exit(3);
     }
 
@@ -193,6 +195,7 @@ void get_guess(char* guess, char* answer, int wordLength,
         printf("Correct!\n");
         free(answer);
         free(guess);
+        fclose(dictionary);
         exit(0);
     }
 }
