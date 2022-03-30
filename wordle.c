@@ -112,6 +112,13 @@ int validate_arguments(int argc, char* argv[]) {
     return 1;
 }
 
+char* word_to_lowercase(char* word) {
+    for (int i = 0; word[i]; i++) {
+        word[i] = tolower(word[i]);
+    }
+    return word;
+}
+
 FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
         int wordLength) {
     FILE* readDictionary = fopen(readDictionaryPath, "r");
@@ -121,7 +128,7 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
         exit(INVALID_DICTIONARY);
     }
 
-    char word[MAX_WORD_LENGTH];
+    char* word = malloc(MAX_WORD_LENGTH);
     FILE* writeDictionary = fopen(writeDictionaryPath, "w+");
 
     int valid;
@@ -135,10 +142,10 @@ FILE* get_dictionary(char readDictionaryPath[], char writeDictionaryPath[],
                     valid = 0;
                     break;
                 }
-                word[i] = tolower(word[i]);
             }
             if (valid) {
                 // add word to writeDictionary
+                word = word_to_lowercase(word);
                 fprintf(writeDictionary, "%s\n", word);
             }
         }
@@ -194,9 +201,7 @@ void get_guess(char* guess, char* answer, int wordLength, int remainingGuesses,
 
     guess[strcspn(guess, "\n")] = '\0';
 
-    for (int i = 0; guess[i]; i++) {
-        guess[i] = tolower(guess[i]);
-    }
+    guess = word_to_lowercase(guess);
 
     if (!strcmp(guess, answer)) {
         printf("Correct!\n");

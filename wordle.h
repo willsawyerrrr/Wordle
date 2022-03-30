@@ -16,6 +16,16 @@ int main(int argc, char* argv[]);
  */
 int validate_arguments(int argc, char* argv[]);
 
+/* word_to_lowercase()
+ * -------------------
+ *  Converts the given word to lowercase.
+ *
+ *  word: word to convert to lowercase
+ *
+ *  Returns: pointer to given word, now lowercase
+ */
+char* word_to_lowercase(char* word);
+
 /* get_dictionary()
  * ----------------
  * Creates a dictionary which contains only valid (purely alphabetical) words
